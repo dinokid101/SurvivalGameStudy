@@ -3,20 +3,33 @@
 #include "SurvivalGame.h"
 #include "SCharacter.h"
 
-
-// Sets default values
 ASCharacter::ASCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
+	MoveComp->GravityScale = 1.5f;
+	MoveComp->JumpZVelocity = 620;
+	MoveComp->bCanWalkOffLedgesWhenCrouching = true;
+	MoveComp->MaxWalkSpeedCrouched = 200;
+	MoveComp->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	CameraBoomComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoomComp->SocketOffset = FVector(0, 35, 0);
+	CameraBoomComp->TargetOffset = FVector(0, 0, 55);
+	CameraBoomComp->bUsePawnControlRotation = true;
+	CameraBoomComp->AttachParent = GetRootComponent();
+
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComp->AttachParent = CameraBoomComp;
+
 
 }
 
-// Called when the game starts or when spawned
-void ASCharacter::BeginPlay()
+void ASCharacter::PostInitializeComponents()
 {
-	Super::BeginPlay();
-	
+	Super::PostInitializeComponents();
+
 }
 
 // Called every frame

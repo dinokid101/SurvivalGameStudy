@@ -10,13 +10,18 @@ class ASCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	USpringArmComponent* CameraBoomComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	UCameraComponent* CameraComp;
+	
 public:
-	// Sets default values for this character's properties
 	ASCharacter();
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
+	virtual void PostInitializeComponents() override;
+
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 

@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+.vs/
+Build/
+Intermediate/
+Saved/
+SurvivalGame.sdf
+SurvivalGame.sln
