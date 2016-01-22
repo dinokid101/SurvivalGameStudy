@@ -77,4 +77,22 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float SprintingSpeedModifier;
 
+
+	/***************************************************************************************/
+	/* Targeting
+	/***************************************************************************************/
+	void OnStartTargeting();
+	void OnEndTargeting();
+	void SetTargeting(bool inTargeting);
+
+	UFUNCTION(BlueprintCallable, Category = "Targeting")
+	bool IsTargeting() const;
+
+	float GetTargetingSpeedModifier() const;
+
+	UPROPERTY(Transient, Replicated)
+	bool bIsTargeting;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
+	float TargetingSpeedModifier;
 };

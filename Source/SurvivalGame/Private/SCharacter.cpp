@@ -23,7 +23,8 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComp->AttachParent = CameraBoomComp;
 
-
+	SprintingSpeedModifier = 2.5f;
+	TargetingSpeedModifier = 0.5f;
 }
 
 void ASCharacter::PostInitializeComponents()
@@ -44,6 +45,7 @@ void ASCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 {
 	Super::SetupPlayerInputComponent(InputComponent);
 
+	// Movement
 	InputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
 	InputComponent->BindAxis("Turn", this, &ASCharacter::AddControllerYawInput);
@@ -54,6 +56,10 @@ void ASCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAction("CrouchToggle", IE_Released, this, &ASCharacter::OnCrounchToggle);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::OnStartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ASCharacter::OnStopJump);
+
+	// Weapon
+	InputComponent->BindAction("Targeting", IE_Pressed, this, &ASCharacter::OnStartTargeting);
+	InputComponent->BindAction("Targeting", IE_Released, this, &ASCharacter::OnEndTargeting);
 }
 
 void ASCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -196,4 +202,29 @@ bool ASCharacter::IsSprinting() const
 float ASCharacter::GetSprintingSpeedModifier() const
 {
 	return SprintingSpeedModifier;
+}
+
+void ASCharacter::OnStartTargeting()
+{
+	SetTargeting(true);
+}
+
+void ASCharacter::OnEndTargeting()
+{
+	SetTargeting(false);
+}
+
+void ASCharacter::SetTargeting(bool inTargeting)
+{
+	bIsTargeting = inTargeting;
+}
+
+bool ASCharacter::IsTargeting() const
+{
+	return bIsTargeting;
+}
+
+float ASCharacter::GetTargetingSpeedModifier() const
+{
+	return TargetingSpeedModifier;
 }
