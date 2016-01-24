@@ -8,7 +8,7 @@
 UCLASS()
 class ASCharacter : public ACharacter
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -18,8 +18,6 @@ private:
 	UCameraComponent* CameraComp;
 	
 public:
-	ASCharacter();
-
 	virtual void PostInitializeComponents() override;
 
 	// Called every frame

@@ -2,8 +2,11 @@
 
 #include "SurvivalGame.h"
 #include "SCharacter.h"
+#include "SCharacterMovementComponent.h"
 
-ASCharacter::ASCharacter()
+
+ASCharacter::ASCharacter(const class FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<USCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
 
