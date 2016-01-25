@@ -44,9 +44,9 @@ public:
 	/** Client call to update jumping state */
 	void SetIsJumping(bool inIsJumping);
 	
-	///** Server side call to update actual jumping state */
-	//UFUNCTION(Server, Server, WithValidation)
-	//void ServerSetIsJumping(bool inIsJumping);
+	/** Server side call to update actual jumping state */
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetIsJumping(bool inIsJumping);
 	
 	/** It's just reset jumping state */
 	virtual void Landed(const FHitResult& inHit) override;
@@ -54,9 +54,9 @@ public:
 	/** Client call to update sprint state */
 	void SetSprinting(bool inIsSprinting);
 
-	///** Server side calll to update actual sprint state */
-	//UFUNCTION(Server, Reliable, WithValidation)
-	//void ServerSetSprinting(bool inIsSprinting);
+	/** Server side calll to update actual sprint state */
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetSprinting(bool inIsSprinting);
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	bool IsSprinting() const;
@@ -83,14 +83,68 @@ public:
 	void OnEndTargeting();
 	void SetTargeting(bool inTargeting);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetTargeting(bool inTargeting);
+
 	UFUNCTION(BlueprintCallable, Category = "Targeting")
 	bool IsTargeting() const;
 
 	float GetTargetingSpeedModifier() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Targeting")
+	FRotator GetAimOffsets() const;
 
 	UPROPERTY(Transient, Replicated)
 	bool bIsTargeting;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
 	float TargetingSpeedModifier;
+
+
+	/***************************************************************************************/
+	/* Stat
+	/***************************************************************************************/
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetHealth() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetHunger() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetMaxHealth() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetMaxHunger() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	void ConsumeFood(float inAmountRestored);
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	bool IsAlive() const;
+
+	void IncrementHunger();
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	float MaxHunger;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition", Replicated)
+	float Hunger;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	float IncrementHungerInterval;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	float IncrementHungerAmount;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	float CriticalHungerThreshold;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition", Replicated)
+	float Health;
+
+
+	/***************************************************************************************/
+	/* Damage
+	/***************************************************************************************/
+	virtual float TakeDamage(float inDamage, struct FDamageEvent const& inDamageEvent, class AController* inEventInstigator, class AActor* inDamageCauser) override;
 };

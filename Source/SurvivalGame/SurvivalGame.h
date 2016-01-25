@@ -4,6 +4,6 @@
 #define __SURVIVALGAME_H__
 
 #include "EngineMinimal.h"
-
+#include "Net/UnrealNetwork.h"
 
 #endif
