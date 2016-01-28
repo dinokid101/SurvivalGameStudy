@@ -17,13 +17,13 @@ ASCharacter::ASCharacter(const class FObjectInitializer& ObjectInitializer)
 	MoveComp->MaxWalkSpeedCrouched = 200;
 	MoveComp->GetNavAgentPropertiesRef().bCanCrouch = true;
 
-	CameraBoomComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoomComp = ObjectInitializer.CreateDefaultSubobject<USpringArmComponent>(this, TEXT("CameraBoom"));
 	CameraBoomComp->SocketOffset = FVector(0, 35, 0);
 	CameraBoomComp->TargetOffset = FVector(0, 0, 55);
 	CameraBoomComp->bUsePawnControlRotation = true;
 	CameraBoomComp->AttachParent = GetRootComponent();
 
-	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComp = ObjectInitializer.CreateDefaultSubobject<UCameraComponent>(this, TEXT("Camera"));
 	CameraComp->AttachParent = CameraBoomComp;
 
 	SprintingSpeedModifier = 2.5f;

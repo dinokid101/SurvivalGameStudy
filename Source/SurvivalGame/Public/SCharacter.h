@@ -6,7 +6,7 @@
 #include "SCharacter.generated.h"
 
 UCLASS()
-class ASCharacter : public ACharacter
+class SURVIVALGAME_API ASCharacter : public ACharacter
 {
 	GENERATED_UCLASS_BODY()
 
