@@ -3,7 +3,7 @@
 #ifndef __SURVIVALGAME_H__
 #define __SURVIVALGAME_H__
 
-#include "EngineMinimal.h"
+#include "Engine.h"
 #include "Net/UnrealNetwork.h"
 
 #endif

@@ -3,6 +3,7 @@
 #include "SurvivalGame.h"
 #include "SCharacter.h"
 #include "SCharacterMovementComponent.h"
+#include "SUsableActor.h"
 
 
 ASCharacter::ASCharacter(const class FObjectInitializer& ObjectInitializer)
@@ -29,8 +30,10 @@ ASCharacter::ASCharacter(const class FObjectInitializer& ObjectInitializer)
 	SprintingSpeedModifier = 2.5f;
 	TargetingSpeedModifier = 0.5f;
 
-	Health = 100;
+	MaxUseDistance = 800;
+	bHasNewFocus = true;
 
+	Health = 100;
 	MaxHunger = 100;
 	Hunger = 0;
 	IncrementHungerInterval = 5.0f;
@@ -42,6 +45,12 @@ void ASCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	if (Role == ROLE_Authority)
+	{
+		FTimerHandle lHandle;
+		GetWorld()->GetTimerManager().SetTimer(lHandle, this, &ASCharacter::IncrementHunger, IncrementHungerInterval, true);
+	}
+
 }
 
 // Called every frame
@@ -52,6 +61,27 @@ void ASCharacter::Tick( float DeltaTime )
 	if (bWantsToRun && !IsSprinting())
 		SetSprinting(true);
 
+	if (Controller && Controller->IsLocalController())
+	{
+		ASUsableActor* lUsable = GetUsableInView();
+		if (FocusedUsableActor != lUsable)
+		{
+			if (FocusedUsableActor)
+				FocusedUsableActor->OnEndFocus();
+			bHasNewFocus = true;
+		}
+
+		FocusedUsableActor = lUsable;
+
+		if (lUsable)
+		{
+			if (bHasNewFocus)
+			{
+				lUsable->OnBeginFocus();
+				bHasNewFocus = false;
+			}
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -218,6 +248,57 @@ bool ASCharacter::IsSprinting() const
 float ASCharacter::GetSprintingSpeedModifier() const
 {
 	return SprintingSpeedModifier;
+}
+
+void ASCharacter::Use()
+{
+	if (Role == ROLE_Authority)
+	{
+		ASUsableActor* lUsable = GetUsableInView();
+		if (lUsable)
+		{
+			lUsable->OnUsed(this);
+		}
+	}
+	else
+	{
+		ServerUse();
+	}
+}
+
+ASUsableActor * ASCharacter::GetUsableInView()
+{
+	FVector lCamLoc;
+	FRotator lCamRot;
+
+	if (Controller == NULL)
+		return NULL;
+
+	Controller->GetPlayerViewPoint(lCamLoc, lCamRot);
+
+	const FVector lTraceStart = lCamLoc;
+	const FVector lDirection = lCamRot.Vector();
+	const FVector lTraceEnd = lTraceStart + (lDirection * MaxUseDistance);
+
+	FCollisionQueryParams lTraceParams(FName(TEXT("TraceUsableActor")), true, this);
+	lTraceParams.bTraceAsyncScene = true;
+	lTraceParams.bReturnPhysicalMaterial = false;
+	lTraceParams.bTraceComplex = true;
+
+	FHitResult lHit(ForceInit);
+	GetWorld()->LineTraceSingleByChannel(lHit, lTraceStart, lTraceEnd, ECollisionChannel::ECC_Visibility, lTraceParams);
+
+	return Cast<ASUsableActor>(lHit.GetActor());
+}
+
+void ASCharacter::ServerUse_Implementation()
+{
+	Use();
+}
+
+bool ASCharacter::ServerUse_Validate()
+{
+	return true;
 }
 
 void ASCharacter::OnStartTargeting()

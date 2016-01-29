@@ -75,7 +75,27 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float SprintingSpeedModifier;
 
+	/***************************************************************************************/
+	/* Object Interaction
+	/***************************************************************************************/
+	
+	/** Use the usable actor currently in focus. */
+	virtual void Use();
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerUse();
+
+	class ASUsableActor* GetUsableInView();
+
+	/** Max distance to use/focus on actors*/
+	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
+	float MaxUseDistance;
+	
+	/** True only in first frame when focused on a new usable actor.*/
+	bool bHasNewFocus;
+
+	class ASUsableActor* FocusedUsableActor;
+	
 	/***************************************************************************************/
 	/* Targeting
 	/***************************************************************************************/
