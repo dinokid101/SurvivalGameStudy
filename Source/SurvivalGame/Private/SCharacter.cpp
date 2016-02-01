@@ -101,6 +101,9 @@ void ASCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::OnStartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ASCharacter::OnStopJump);
 
+	// Interaction
+	InputComponent->BindAction("Use", IE_Pressed, this, &ASCharacter::Use);
+
 	// Weapon
 	InputComponent->BindAction("Targeting", IE_Pressed, this, &ASCharacter::OnStartTargeting);
 	InputComponent->BindAction("Targeting", IE_Released, this, &ASCharacter::OnEndTargeting);

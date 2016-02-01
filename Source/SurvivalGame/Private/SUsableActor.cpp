@@ -15,6 +15,8 @@ void ASUsableActor::OnBeginFocus()
 {
 	// Used by custom PostProcess to render outline
 	MeshComponent->SetRenderCustomDepth(true);
+	UE_LOG(LogClass, Log, TEXT("[%s] OnBeginFocus"), *(this->GetName()));
+
 }
 
 void ASUsableActor::OnEndFocus()
