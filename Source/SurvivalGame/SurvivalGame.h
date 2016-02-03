@@ -6,4 +6,11 @@
 #include "Engine.h"
 #include "Net/UnrealNetwork.h"
 
+/** DefaultEngine.ini [/Script/Engine.CollisionProfile] should match with this list */
+#define COLLISION_WEAPON		ECC_GameTraceChannel1
+
+/** DefaultEngine.ini [/Scritp/Engine.PhysicsSetting] should mathc this */
+#define SURFACE_DEFAULT			SurfaceType_Default
+#define SURFACE_FLESH			SurfaceType1
+
 #endif
