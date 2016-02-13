@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "STypes.h"
 #include "SWeapon.generated.h"
 
 UENUM()
@@ -38,6 +39,9 @@ public:
 	
 	bool IsAttachedToPawn() const;
 
+	/** The character socket to store this item at. */
+	EInventorySlot StorageSlot;
+
 	FORCEINLINE EInventorySlot GetStorageSlot()
 	{
 		return StorageSlot;
@@ -55,9 +59,6 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Mesh")
 	USkeletalMeshComponent* Mesh;
-
-	/** The character socket to store this item at. */
-	EInventorySlot StorageSlot;
 
 	UFUNCTION()
 	void OnRep_MyPawn();
@@ -142,7 +143,7 @@ protected:
 	FVector GetMuzzleLocation() const;
 	FVector GetMuzzleDirection() const;
 	UAudioComponent* PlayWeaponSound(USoundCue* inSountToPlay);
-	float PlayWepaonAnimation(UAnimMontage* inAnimation, float inPlayRate = 1.f, FName StartSectionName = NAME_None);
+	float PlayWeaponAnimation(UAnimMontage* inAnimation, float inPlayRate = 1.f, FName StartSectionName = NAME_None);
 	void StopWeaponAnimation(UAnimMontage* inAnimation);
 
 private:
@@ -158,8 +159,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "FX")
 	FName MuzzleAttachPoint;
 
-	UPROPERTY(Transient, Category = "FX")
-	UParticleSystem* MuzzlePCS;
+	UPROPERTY(Transient)
+	UParticleSystemComponent* MuzzlePCS;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* EquipAnim;
@@ -173,5 +174,5 @@ private:
 	int32 BurstCounter;
 
 	UFUNCTION()
-	void OnRep_BurstCounter;
+	void OnRep_BurstCounter();
 };
